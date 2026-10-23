@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  --font-sn-body: "Cormorant Garamond";
+  --font-sn-display: "Great Vibes";
+  --font-marcellus: "Marcellus";
+  --font-serif: "Playfair Display";
+  --font-cinzel: "Cinzel";
+  --font-montserrat: "Montserrat";
+  --font-mea: "Mea Culpa";
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #FBF9F1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.beeralu-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.beeralu-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
