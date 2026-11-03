@@ -40,7 +40,7 @@ export const CONFIG = {
   rsvpSubNote: '',
   maxGuests: 10,
   // Google Apps Script web-app /exec URL (see code.ts) that saves RSVPs and wishes
-  sheetEndpoint: 'https://script.google.com/macros/s/AKfycbwWpEFezcpWOkywe4k9paR9LBtIPzPpYrCnlEZh8gJP7oFt9ulsnqvGdCuVy4lAbEYx/exec',
+  sheetEndpoint: 'https://script.google.com/macros/s/AKfycbxTFeNyOu7YTMaNDF9XYRnkox9rBLqstB2BeaBZBvJ4A9ith_vROgw1UivVx0tp909K/exec',
   // Background song: put the file at public/song.mp3
   song: '/song.mp3',
   contacts: [
