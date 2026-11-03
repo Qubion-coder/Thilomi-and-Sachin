@@ -11,19 +11,19 @@
 // After editing this script, use Deploy > Manage deployments > Edit > New version
 // so the same /exec URL picks up the change.
 
-const SPREADSHEET_ID = "1fLxe-MtdiJaWHBp1BcSbgzQbSC-Dc5G4ZR8jI5gpnRQ";
+const SPREADSHEET_ID = "1Qa8H_24EwUuxzV7p0ICgltoB6Ajj25AFNJiKztJ0U4Q";
 const TIMEZONE = "Asia/Colombo";
 
 const SHEETS = {
   rsvp: {
     name: "RSVP",
     headers: ["Submitted At", "Name", "Attendance", "Guest Count", "Phone", "Note"],
-    color: "#7E9970",
+    color: "#A47F35",
   },
   wishes: {
     name: "Wishes",
     headers: ["Submitted At", "Name", "Message", "Show on Site"],
-    color: "#A8BE9A",
+    color: "#C9A75C",
   },
 };
 

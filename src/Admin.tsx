@@ -7,10 +7,10 @@ import {PREFIXES, buildDisplayName, guestLink, type Prefix} from './guest.ts';
 const C = {
   bg: '#FBF9F1',
   card: '#FFFFFF',
-  text: '#5A4A36',
-  muted: '#8A7B66',
-  accent: '#B8964F',
-  accentDark: '#8C6D2F',
+  text: '#3F3122',
+  muted: '#6B5A43',
+  accent: '#A47F35',
+  accentDark: '#7A5A1E',
   line: 'rgba(184, 150, 79, 0.35)',
 };
 
@@ -99,7 +99,10 @@ export default function Admin() {
               <label htmlFor="prefix" className={label} style={{color: C.accent}}>
                 Select prefix
               </label>
-              <select id="prefix" value={prefix} onChange={(e) => setPrefix(e.target.value as Prefix)} className={field} style={fieldStyle}>
+              <select id="prefix" value={prefix} onChange={(e) => {
+                  setPrefix(e.target.value as Prefix);
+                  setGenerated(null);
+                }} className={field} style={fieldStyle}>
                 {PREFIXES.map((p) => (
                   <option key={p} value={p}>
                     {p}
@@ -116,7 +119,10 @@ export default function Admin() {
                 id="guest"
                 type="text"
                 value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
+                onChange={(e) => {
+                  setGuestName(e.target.value);
+                  setGenerated(null);
+                }}
                 placeholder="e.g. Sanjaya"
                 autoComplete="off"
                 className={field}
@@ -176,7 +182,7 @@ export default function Admin() {
                   Website greeting
                 </p>
                 <p className="rounded-xl px-4 py-3 text-center italic" style={{background: C.bg, border: `1px solid ${C.line}`, fontFamily: '"Cormorant Garamond", serif', fontSize: '1.1rem'}}>
-                  We cordially invite <strong style={{color: C.accentDark}}>{generated.displayName}</strong> to celebrate our special day with us.
+                  …invite <strong style={{color: C.accentDark}}>{generated.displayName}</strong> to celebrate the marriage of {CONFIG.bride} &amp; {CONFIG.groom}
                 </p>
               </div>
               <div>

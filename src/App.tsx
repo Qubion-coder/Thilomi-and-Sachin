@@ -40,10 +40,13 @@ export const CONFIG = {
   rsvpSubNote: '',
   maxGuests: 10,
   // Google Apps Script web-app /exec URL (see code.ts) that saves RSVPs and wishes
-  sheetEndpoint: 'https://script.google.com/macros/s/AKfycbzWuRmSOCZvqtJBO7byRCpYkyexUgkvLM9G2hHy9dXlPJ_0DA1lTH8GgKS_CT6h6W0noA/exec',
+  sheetEndpoint: 'https://script.google.com/macros/s/AKfycbwWpEFezcpWOkywe4k9paR9LBtIPzPpYrCnlEZh8gJP7oFt9ulsnqvGdCuVy4lAbEYx/exec',
   // Background song: put the file at public/song.mp3
   song: '/song.mp3',
-  contacts: [] as {name: string; phone: string}[],
+  contacts: [
+    {name: 'Thilomi', phone: '0766146699'},
+    {name: 'Sachin', phone: '0761005409'},
+  ],
 };
 
 const C = {
@@ -63,6 +66,7 @@ const F = {
   cinzel: 'var(--font-cinzel), "Cinzel", serif',
   montserrat: 'var(--font-montserrat), "Montserrat", sans-serif',
   mea: 'var(--font-mea), "Mea Culpa", cursive',
+  monogram: 'var(--font-monogram), "Pinyon Script", cursive',
 };
 
 const glass: CSSProperties = {
@@ -164,10 +168,10 @@ function SectionTitle({eyebrow, first, accent}: {eyebrow: string; first: string;
 // Script initials, the second letter tucked down and to the right of the first
 function Monogram({size, color}: {size: string; color?: string}) {
   // Padding widens the gradient-clip box so script swashes past the em box aren't cut off
-  const pad = 0.3;
+  const pad = 0.6;
   const letter: CSSProperties = color
-    ? {fontFamily: F.display, color, fontWeight: 400, padding: `${pad}em`}
-    : {...goldText, fontWeight: 400, padding: `${pad}em`};
+    ? {fontFamily: F.monogram, color, fontWeight: 400, padding: `${pad}em`}
+    : {...goldText, fontFamily: F.monogram, fontWeight: 400, padding: `${pad}em`};
   return (
     <span className="relative inline-block select-none" style={{fontSize: size, lineHeight: 1, width: '1.3em', height: '1.1em'}} aria-hidden="true">
       <span className="absolute" style={{...letter, left: `-${pad}em`, top: `calc(-0.08em - ${pad}em)`}}>
@@ -363,28 +367,6 @@ function Hero() {
         <div className="mx-auto mb-9" style={{filter: 'drop-shadow(0 2px 6px rgba(120,95,50,0.18))'}}>
           <Monogram size="clamp(4.2rem,19vw,6.4rem)" />
         </div>
-        {GUEST && (
-          <div className="mb-9 flex flex-col items-center">
-            <p className="max-w-[28ch] text-[1.02rem] sm:text-[1.15rem]" style={{...script, color: C.text}}>
-              We cordially invite{' '}
-              <span
-                className="not-italic"
-                style={{
-                  ...goldText,
-                  fontWeight: 400,
-                  fontSize: GUEST.length > 22 ? '1.3em' : GUEST.length > 14 ? '1.5em' : '1.7em',
-                  lineHeight: 1.3,
-                  display: 'block',
-                  whiteSpace: GUEST.length > 28 ? 'normal' : 'nowrap',
-                }}
-              >
-                {GUEST}
-              </span>
-              to celebrate our special day with us.
-            </p>
-            <Divider className="mt-5" />
-          </div>
-        )}
         <p className="text-[0.98rem] sm:text-[1.08rem]" style={script}>
           With hearts full of love and warmth,
         </p>
@@ -401,8 +383,26 @@ function Hero() {
           </p>
           <p>{CONFIG.parents2}</p>
         </div>
-        <p className="text-[0.98rem] sm:text-[1.08rem]" style={script}>
-          invite you to celebrate the marriage of
+        <p className="max-w-[30ch] text-[0.98rem] sm:text-[1.08rem]" style={script}>
+          invite{' '}
+          {GUEST ? (
+            <span
+              className="not-italic"
+              style={{
+                ...goldText,
+                fontWeight: 400,
+                fontSize: GUEST.length > 22 ? '1.3em' : GUEST.length > 14 ? '1.5em' : '1.7em',
+                lineHeight: 1.3,
+                display: 'block',
+                whiteSpace: GUEST.length > 28 ? 'normal' : 'nowrap',
+              }}
+            >
+              {GUEST}
+            </span>
+          ) : (
+            'you '
+          )}
+          to celebrate the marriage of
         </p>
         <h1 className="my-6 leading-[1.35]" style={{...goldText, fontSize: 'clamp(1.85rem,8vw,5rem)', textWrap: 'nowrap'}}>
           {CONFIG.bride} <span style={{fontSize: '0.82em'}}>&amp;</span> {CONFIG.groom}
@@ -1087,6 +1087,30 @@ function Rsvp() {
               </button>
             </>
           )}
+          {CONFIG.contacts.length > 0 && (
+            <div className="relative z-[1] mt-7 border-t pt-6" style={{borderColor: C.line}}>
+              <p className="mb-3 text-center text-[0.68rem] uppercase tracking-[0.18em]" style={label}>
+                For inquiries, call
+              </p>
+              <div className="flex gap-3">
+                {CONFIG.contacts.map((c) => (
+                  <a
+                    key={c.phone}
+                    href={`tel:${c.phone}`}
+                    aria-label={`Call ${c.name} on ${c.phone}`}
+                    className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full px-3 py-3 text-center leading-tight transition-transform duration-200 hover:-translate-y-0.5 active:scale-95"
+                    style={choice(false)}
+                  >
+                    <span className="flex items-center gap-1.5 uppercase" style={{color: C.text}}>
+                      <Phone className="h-3.5 w-3.5" style={{color: C.gold}} aria-hidden="true" />
+                      {c.name}
+                    </span>
+                    <span style={{fontFamily: F.montserrat, fontSize: '0.7rem', letterSpacing: '0.06em', color: C.goldDark}}>{c.phone}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </form>
       </Reveal>
     </section>
@@ -1106,7 +1130,7 @@ async function sendToSheet(payload: Record<string, unknown>) {
 
 function Wishes() {
   const [wishes, setWishes] = useState<Wish[]>([]);
-  const [name, setName] = useState('');
+  const [name, setName] = useState(GUEST);
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
 
@@ -1250,6 +1274,23 @@ function Footer() {
           className="pointer-events-none absolute inset-3 sm:inset-5"
           style={{borderRadius: 'clamp(30px,7vw,78px) clamp(30px,7vw,78px) 20px 20px', border: '1px solid rgba(184, 150, 79, 0.28)'}}
         />
+        {/* Couple's joined hands, faded softly across the whole card */}
+        <img
+          src="/beeralu-frame/hands.webp"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          draggable={false}
+          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+          style={{
+            objectPosition: '50% 42%',
+            opacity: 0.32,
+            filter: 'sepia(0.35) saturate(0.8) brightness(1.1)',
+            mixBlendMode: 'multiply',
+            WebkitMaskImage: 'radial-gradient(ellipse 62% 60% at 50% 50%, #000 40%, transparent 100%)',
+            maskImage: 'radial-gradient(ellipse 62% 60% at 50% 50%, #000 40%, transparent 100%)',
+          }}
+        />
         <div className="relative">
           <div className="text-[0.82rem] uppercase tracking-[0.4em]" style={{fontFamily: F.montserrat, color: C.gold}}>
             Save the date
@@ -1265,19 +1306,6 @@ function Footer() {
           </div>
           <div className="mb-7 mt-3 whitespace-nowrap leading-[1.35]" style={{...goldText, fontSize: 'clamp(1.4rem,6vw,2.1rem)'}}>
             {CONFIG.bride} &amp; {CONFIG.groom}
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            {CONFIG.contacts.map((c) => (
-              <a
-                key={c.phone}
-                href={`tel:${c.phone}`}
-                aria-label={`Call ${c.name}`}
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.13em] transition-transform duration-200 hover:-translate-y-0.5 active:scale-95 sm:px-6"
-                style={{...pillButton, fontFamily: F.montserrat}}
-              >
-                <Phone className="h-3.5 w-3.5" style={{color: C.gold}} aria-hidden="true" /> {c.name}
-              </a>
-            ))}
           </div>
         </div>
       </Reveal>
