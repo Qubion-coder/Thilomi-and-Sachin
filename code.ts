@@ -17,7 +17,7 @@ const TIMEZONE = "Asia/Colombo";
 const SHEETS = {
   rsvp: {
     name: "RSVP",
-    headers: ["Submitted At", "Name", "Attendance", "Guest Count", "Phone", "Note"],
+    headers: ["Submitted At", "Name", "Attendance", "Guest Count"],
     color: "#A47F35",
   },
   wishes: {
@@ -88,8 +88,6 @@ function saveRsvp(p) {
     clean(p.name, 120),
     attending ? "Joyfully accept" : "Regretfully decline",
     attending ? Number(p.guests) || 1 : 0,
-    clean(p.phone, 40),
-    clean(p.note, 500),
   ]);
 }
 
@@ -132,7 +130,7 @@ function getSheet(def) {
       .setBackground(def.color)
       .setHorizontalAlignment("center");
     sheet.setFrozenRows(1);
-    def.headers.forEach((h, i) => sheet.setColumnWidth(i + 1, h === "Message" || h === "Note" ? 360 : 170));
+    def.headers.forEach((h, i) => sheet.setColumnWidth(i + 1, h === "Message" ? 360 : 170));
   }
   return sheet;
 }
