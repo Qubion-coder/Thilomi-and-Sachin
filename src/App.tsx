@@ -214,7 +214,7 @@ function Cover({onOpened}: {onOpened: () => void}) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden sm:block"
-        style={{backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+        style={{backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'left top'}}
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{background: 'rgba(250,249,241,0.34)'}} />
       <div
@@ -1494,7 +1494,7 @@ export default function App() {
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 hidden sm:block"
-          style={{zIndex: -1, backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+          style={{zIndex: -1, backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'left top'}}
         />
         <div
           aria-hidden="true"
