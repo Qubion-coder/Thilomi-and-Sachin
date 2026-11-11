@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode, type RefObject} from 'react';
+import {useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type ReactNode, type RefObject} from 'react';
 import {AnimatePresence, motion} from 'motion/react';
 import {CalendarHeart, ChevronDown, Heart, House, Mail, MapPin, Music, Phone, Send, VolumeX} from 'lucide-react';
 import {readGuestFromUrl} from './guest.ts';
@@ -66,7 +66,6 @@ const F = {
   cinzel: 'var(--font-cinzel), "Cinzel", serif',
   montserrat: 'var(--font-montserrat), "Montserrat", sans-serif',
   mea: 'var(--font-mea), "Mea Culpa", cursive',
-  monogram: 'var(--font-monogram), "Pinyon Script", cursive',
 };
 
 const glass: CSSProperties = {
@@ -165,22 +164,43 @@ function SectionTitle({eyebrow, first, accent}: {eyebrow: string; first: string;
   );
 }
 
-// Script initials, the second letter tucked down and to the right of the first
+// Serif initials, the second letter set down and to the right, with a script loop through them.
+// Drawn as SVG so the gold gradient covers letters and loop alike and nothing gets clipped.
 function Monogram({size, color}: {size: string; color?: string}) {
-  // Padding widens the gradient-clip box so script swashes past the em box aren't cut off
-  const pad = 0.6;
-  const letter: CSSProperties = color
-    ? {fontFamily: F.monogram, color, fontWeight: 400, padding: `${pad}em`}
-    : {...goldText, fontFamily: F.monogram, fontWeight: 400, padding: `${pad}em`};
+  const gradientId = useId();
+  const paint = color ?? `url(#${gradientId})`;
   return (
-    <span className="relative inline-block select-none" style={{fontSize: size, lineHeight: 1, width: '1.3em', height: '1.1em'}} aria-hidden="true">
-      <span className="absolute" style={{...letter, left: `-${pad}em`, top: `calc(-0.08em - ${pad}em)`}}>
-        {CONFIG.initials[0]}
-      </span>
-      <span className="absolute" style={{...letter, left: `calc(0.6em - ${pad}em)`, top: `calc(0.2em - ${pad}em)`}}>
-        {CONFIG.initials[1]}
-      </span>
-    </span>
+    <svg
+      viewBox="0 0 120 130"
+      aria-hidden="true"
+      className="inline-block select-none"
+      style={{height: `calc(${size} * 1.2)`, width: `calc(${size} * 1.2 * 120 / 130)`, overflow: 'visible'}}
+    >
+      {!color && (
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#C9A75C" />
+            <stop offset="0.52" stopColor="#A47F35" />
+            <stop offset="1" stopColor="#7A5A1E" />
+          </linearGradient>
+        </defs>
+      )}
+      <g fill={paint} style={{fontFamily: F.serif, fontWeight: 500}}>
+        <text x="6" y="72" fontSize="78">
+          {CONFIG.initials[0]}
+        </text>
+        <text x="44" y="122" fontSize="88">
+          {CONFIG.initials[1]}
+        </text>
+      </g>
+      <path
+        d="M44 100 C22 96 18 76 42 66 C66 56 92 40 98 22 C102 8 88 6 80 18 C72 30 70 50 68 62"
+        fill="none"
+        stroke={paint}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
@@ -1097,16 +1117,14 @@ function Rsvp() {
                   <a
                     key={c.phone}
                     href={`tel:${c.phone}`}
-                    aria-label={`Call ${c.name} on ${c.phone}`}
+                    aria-label={`Call ${c.name}`}
                     className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full px-3 py-3 text-center leading-tight transition-transform duration-200 hover:-translate-y-0.5 active:scale-95"
                     style={choice(false)}
                   >
                     <span className="flex items-center gap-1.5 uppercase" style={{color: C.text}}>
                       <Phone className="h-3.5 w-3.5" style={{color: C.gold}} aria-hidden="true" />
                       {c.name}
-                    </span>
-                    <span style={{fontFamily: F.montserrat, fontSize: '0.7rem', letterSpacing: '0.06em', color: C.goldDark}}>{c.phone}</span>
-                  </a>
+                    </span>                  </a>
                 ))}
               </div>
             </div>
