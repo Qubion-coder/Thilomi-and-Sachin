@@ -164,17 +164,18 @@ function SectionTitle({eyebrow, first, accent}: {eyebrow: string; first: string;
   );
 }
 
-// Serif initials, the second letter set down and to the right, with a script loop through them.
-// Drawn as SVG so the gold gradient covers letters and loop alike and nothing gets clipped.
+// Script initials interlocked: the S tucked under the T's crossbar.
+// Drawn as SVG so the gold gradient covers the swashes and nothing gets clipped;
+// the viewBox is fitted to the glyphs' measured ink bounds (about 2..147 x 5..133).
 function Monogram({size, color}: {size: string; color?: string}) {
   const gradientId = useId();
   const paint = color ?? `url(#${gradientId})`;
   return (
     <svg
-      viewBox="0 0 120 130"
+      viewBox="-2 0 154 138"
       aria-hidden="true"
       className="inline-block select-none"
-      style={{height: `calc(${size} * 1.2)`, width: `calc(${size} * 1.2 * 120 / 130)`, overflow: 'visible'}}
+      style={{height: `calc(${size} * 1.2)`, width: `calc(${size} * 1.2 * 154 / 138)`, overflow: 'visible'}}
     >
       {!color && (
         <defs>
@@ -185,21 +186,14 @@ function Monogram({size, color}: {size: string; color?: string}) {
           </linearGradient>
         </defs>
       )}
-      <g fill={paint} style={{fontFamily: F.serif, fontWeight: 500}}>
-        <text x="6" y="72" fontSize="78">
+      <g fill={paint} style={{fontFamily: F.display, fontWeight: 400}}>
+        <text x="0" y="82" fontSize="104">
           {CONFIG.initials[0]}
         </text>
-        <text x="44" y="122" fontSize="88">
+        <text x="40" y="124" fontSize="96">
           {CONFIG.initials[1]}
         </text>
       </g>
-      <path
-        d="M44 100 C22 96 18 76 42 66 C66 56 92 40 98 22 C102 8 88 6 80 18 C72 30 70 50 68 62"
-        fill="none"
-        stroke={paint}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
     </svg>
   );
 }
