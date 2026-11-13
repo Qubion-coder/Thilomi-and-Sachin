@@ -1,4 +1,4 @@
-import {useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type ReactNode, type RefObject} from 'react';
+import {useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode, type RefObject} from 'react';
 import {AnimatePresence, motion} from 'motion/react';
 import {CalendarHeart, ChevronDown, Heart, House, Mail, MapPin, Music, Phone, Send, VolumeX} from 'lucide-react';
 import {readGuestFromUrl} from './guest.ts';
@@ -164,37 +164,22 @@ function SectionTitle({eyebrow, first, accent}: {eyebrow: string; first: string;
   );
 }
 
-// Script initials interlocked: the S tucked under the T's crossbar.
-// Drawn as SVG so the gold gradient covers the swashes and nothing gets clipped;
-// the viewBox is fitted to the glyphs' measured ink bounds (about 2..147 x 5..133).
+// The couple's TS monogram artwork, used as a mask so it can be filled with the gold
+// gradient (or a flat colour on the envelope seal) while keeping its exact shape.
 function Monogram({size, color}: {size: string; color?: string}) {
-  const gradientId = useId();
-  const paint = color ?? `url(#${gradientId})`;
+  const mask = 'url(/beeralu-frame/monogram.png) center / contain no-repeat';
   return (
-    <svg
-      viewBox="-2 0 154 138"
+    <span
       aria-hidden="true"
       className="inline-block select-none"
-      style={{height: `calc(${size} * 1.2)`, width: `calc(${size} * 1.2 * 154 / 138)`, overflow: 'visible'}}
-    >
-      {!color && (
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#C9A75C" />
-            <stop offset="0.52" stopColor="#A47F35" />
-            <stop offset="1" stopColor="#7A5A1E" />
-          </linearGradient>
-        </defs>
-      )}
-      <g fill={paint} style={{fontFamily: F.display, fontWeight: 400}}>
-        <text x="0" y="82" fontSize="104">
-          {CONFIG.initials[0]}
-        </text>
-        <text x="40" y="124" fontSize="96">
-          {CONFIG.initials[1]}
-        </text>
-      </g>
-    </svg>
+      style={{
+        height: `calc(${size} * 1.2)`,
+        width: `calc(${size} * 1.2 * 803 / 807)`,
+        background: color ?? 'linear-gradient(180deg, #C9A75C 0%, #A47F35 52%, #7A5A1E 100%)',
+        WebkitMask: mask,
+        mask,
+      }}
+    />
   );
 }
 
