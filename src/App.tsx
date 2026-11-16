@@ -1130,12 +1130,9 @@ async function sendToSheet(payload: Record<string, unknown>) {
   await fetch(CONFIG.sheetEndpoint, {method: 'POST', mode: 'no-cors', body});
 }
 
-function Wishes() {
+// Loads the wishes guests have left, newest first; the form adds new ones optimistically
+function useWishes() {
   const [wishes, setWishes] = useState<Wish[]>([]);
-  const [name, setName] = useState(GUEST);
-  const [message, setMessage] = useState('');
-  const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
-
   useEffect(() => {
     if (!CONFIG.sheetEndpoint) return;
     fetch(`${CONFIG.sheetEndpoint}?type=wishes`)
@@ -1145,6 +1142,13 @@ function Wishes() {
       })
       .catch(() => {});
   }, []);
+  return [wishes, setWishes] as const;
+}
+
+function Wishes({onWish}: {onWish: (wish: Wish) => void}) {
+  const [name, setName] = useState(GUEST);
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -1153,7 +1157,7 @@ function Wishes() {
     setStatus('sending');
     try {
       await sendToSheet({type: 'wish', ...wish});
-      setWishes((w) => [wish, ...w]);
+      onWish(wish);
       setMessage('');
       setStatus('done');
     } catch {
@@ -1231,27 +1235,6 @@ function Wishes() {
           </button>
         </form>
 
-        {wishes.length > 0 && (
-          <div className="beeralu-scroll mt-6 flex max-h-[420px] flex-col gap-3 overflow-y-auto text-left">
-            {wishes.map((w, i) => (
-              <motion.div
-                key={`${w.name}-${i}-${w.message.slice(0, 12)}`}
-                className="px-5 py-4"
-                style={{...glass, borderRadius: 18}}
-                initial={{opacity: 0, y: 10}}
-                animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.4, delay: Math.min(i, 6) * 0.05}}
-              >
-                <p className="italic" style={{fontFamily: F.body, color: C.text, fontSize: '1.05rem', lineHeight: 1.5, whiteSpace: 'pre-line'}}>
-                  “{w.message}”
-                </p>
-                <p className="mt-2 text-[0.66rem] uppercase tracking-[0.18em]" style={{fontFamily: F.montserrat, color: C.gold}}>
-                  — {w.name}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        )}
       </Reveal>
     </section>
   );
@@ -1311,6 +1294,72 @@ function Footer() {
           </div>
         </div>
       </Reveal>
+    </section>
+  );
+}
+
+// ---------------- Wish wall ----------------
+
+function WishCard({wish}: {wish: Wish}) {
+  return (
+    <figure className="relative flex w-[78vw] max-w-[300px] shrink-0 flex-col px-6 pb-5 pt-7 text-left" style={{...glass, borderRadius: 20}}>
+      <span aria-hidden="true" className="pointer-events-none absolute" style={{inset: 6, borderRadius: 15, border: `1px solid ${C.line}`}} />
+      <span aria-hidden="true" className="absolute left-5 top-1 leading-none" style={{fontFamily: F.serif, color: C.gold, fontSize: '2.6rem', opacity: 0.5}}>
+        “
+      </span>
+      <blockquote
+        className="relative z-[1] italic"
+        style={{
+          fontFamily: F.body,
+          color: C.text,
+          fontSize: '1.05rem',
+          lineHeight: 1.5,
+          whiteSpace: 'pre-line',
+          display: '-webkit-box',
+          WebkitLineClamp: 6,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}
+      >
+        {wish.message}
+      </blockquote>
+      <figcaption className="relative z-[1] mt-auto flex items-center gap-2 pt-4 text-[0.66rem] uppercase tracking-[0.18em]" style={{fontFamily: F.montserrat, color: C.gold}}>
+        <Heart className="h-3 w-3" style={{fill: C.gold}} aria-hidden="true" /> {wish.name}
+      </figcaption>
+    </figure>
+  );
+}
+
+// Guests' wishes on a slow, endless carousel (pauses on touch/hover); a short list just sits still
+function WishWall({wishes}: {wishes: Wish[]}) {
+  if (wishes.length === 0) return null;
+  const moving = wishes.length >= 3;
+  return (
+    <section id="wish-wall" className="py-14 text-center sm:py-20">
+      <SectionTitle eyebrow="From the hearts of our loved ones" first="LOVE" accent="NOTES" />
+      {moving ? (
+        <div
+          className="wish-marquee relative overflow-hidden"
+          style={{
+            WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)',
+            maskImage: 'linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)',
+          }}
+        >
+          <div className="wish-marquee-track flex w-max items-stretch py-4" style={{animationDuration: `${Math.max(30, wishes.length * 9)}s`}}>
+            {[...wishes, ...wishes].map((w, i) => (
+              <div key={i} aria-hidden={i >= wishes.length || undefined} className="flex pr-4">
+                <WishCard wish={w} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-stretch justify-center gap-4 px-6">
+          {wishes.map((w, i) => (
+            <WishCard key={i} wish={w} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -1468,6 +1517,7 @@ function BottomNav({visible, scrollRef}: {visible: boolean; scrollRef: RefObject
 
 export default function App() {
   const [coverOpen, setCoverOpen] = useState(true);
+  const [wishes, setWishes] = useWishes();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -1518,8 +1568,9 @@ export default function App() {
                   <Events />
                   <Venue />
                   <Rsvp />
-                  <Wishes />
+                  <Wishes onWish={(w) => setWishes((list) => [w, ...list])} />
                   <Footer />
+                  <WishWall wishes={wishes} />
                   <div className="px-4 py-7 text-center">
                     <p className="text-[0.7rem] tracking-wide" style={{color: C.muted}}>
                       Created with <Heart className="-mt-0.5 inline h-3 w-3" style={{color: C.gold, fill: C.gold}} aria-hidden="true" /> by{' '}

@@ -29,3 +29,23 @@ body,
   height: 0;
   display: none;
 }
+
+/* Love-notes carousel: the track holds the list twice, so sliding by half loops seamlessly */
+@keyframes wish-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.wish-marquee-track {
+  animation: wish-marquee linear infinite;
+}
+
+.wish-marquee:hover .wish-marquee-track,
+.wish-marquee:active .wish-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wish-marquee { overflow-x: auto; }
+  .wish-marquee-track { animation: none; }
+}
