@@ -6,6 +6,11 @@ import {readGuestFromUrl} from './guest.ts';
 // Personalised guest name from the link, e.g. /Mr.%20Sanjaya -> "Mr. Sanjaya"
 const GUEST = readGuestFromUrl();
 
+// Bump when replacing an image or the song under the same file name, so phones that
+// cached the old file fetch the new one (keep the preload links in index.html in sync)
+const ASSET_VERSION = '6';
+const asset = (path: string) => `${path}?v=${ASSET_VERSION}`;
+
 // ---- Invitation details (edit here) ----
 export const CONFIG = {
   bride: 'Thilomi',
@@ -43,7 +48,7 @@ export const CONFIG = {
   // Google Apps Script web-app /exec URL (see code.ts) that saves RSVPs and wishes
   sheetEndpoint: 'https://script.google.com/macros/s/AKfycbxTFeNyOu7YTMaNDF9XYRnkox9rBLqstB2BeaBZBvJ4A9ith_vROgw1UivVx0tp909K/exec',
   // Background song: put the file at public/song.mp3
-  song: '/song.mp3',
+  song: asset('/song.mp3'),
   contacts: [
     {name: 'Thilomi', phone: '0766146699'},
     {name: 'Sachin', phone: '0761005409'},
@@ -168,7 +173,7 @@ function SectionTitle({eyebrow, first, accent}: {eyebrow: string; first: string;
 // The couple's TS monogram artwork, used as a mask so it can be filled with the gold
 // gradient (or a flat colour on the envelope seal) while keeping its exact shape.
 function Monogram({size, color}: {size: string; color?: string}) {
-  const mask = 'url(/beeralu-frame/monogram.png) center / contain no-repeat';
+  const mask = `url(${asset('/beeralu-frame/monogram.png')}) center / contain no-repeat`;
   return (
     <span
       aria-hidden="true"
@@ -209,12 +214,12 @@ function Cover({onOpened}: {onOpened: () => void}) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 sm:hidden"
-        style={{backgroundImage: 'url(/beeralu-frame/cover-bg-mobile.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+        style={{backgroundImage: `url(${asset('/beeralu-frame/cover-bg-mobile.webp')})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
       />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden sm:block"
-        style={{backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+        style={{backgroundImage: `url(${asset('/beeralu-frame/cover-bg-web.webp')})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{background: 'rgba(250,249,241,0.34)'}} />
       <div
@@ -298,7 +303,7 @@ function Cover({onOpened}: {onOpened: () => void}) {
       >
         <div className="absolute inset-0 transition-opacity duration-700 ease-out" style={{opacity: opening ? 0 : 1}}>
           <img
-            src="/beeralu-frame/envelope-closed.webp"
+            src={asset('/beeralu-frame/envelope-closed.webp')}
             alt=""
             aria-hidden="true"
             draggable={false}
@@ -312,7 +317,7 @@ function Cover({onOpened}: {onOpened: () => void}) {
         </div>
         <div className="absolute inset-0 transition-opacity duration-700 ease-out" style={{opacity: opening ? 1 : 0}}>
           <img
-            src="/beeralu-frame/envelope-photo.webp"
+            src={asset('/beeralu-frame/envelope-photo.webp')}
             alt={`${CONFIG.bride} & ${CONFIG.groom} wedding invitation`}
             draggable={false}
             className="absolute inset-0 h-full w-full select-none object-contain"
@@ -1261,7 +1266,7 @@ function Footer() {
         />
         {/* Couple's joined hands, faded softly across the whole card */}
         <img
-          src="/beeralu-frame/hands.webp"
+          src={asset('/beeralu-frame/hands.webp')}
           alt=""
           aria-hidden="true"
           loading="lazy"
@@ -1546,12 +1551,12 @@ export default function App() {
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 hidden sm:block"
-          style={{zIndex: -1, backgroundImage: 'url(/beeralu-frame/cover-bg-web.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+          style={{zIndex: -1, backgroundImage: `url(${asset('/beeralu-frame/cover-bg-web.webp')})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
         />
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 sm:hidden"
-          style={{zIndex: -1, backgroundImage: 'url(/beeralu-frame/cover-bg-mobile.webp)', backgroundSize: 'cover', backgroundPosition: 'center'}}
+          style={{zIndex: -1, backgroundImage: `url(${asset('/beeralu-frame/cover-bg-mobile.webp')})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
         />
         <div aria-hidden="true" className="pointer-events-none fixed inset-0" style={{zIndex: -1, background: 'linear-gradient(90deg, rgba(251,249,241,0.05) 0%, rgba(251,249,241,0.25) 9%, rgba(251,249,241,0.82) 24%, rgba(251,249,241,0.88) 50%, rgba(251,249,241,0.82) 76%, rgba(251,249,241,0.25) 91%, rgba(251,249,241,0.05) 100%)'}} />
         <div className="absolute inset-0" style={{zIndex: 2}}>
