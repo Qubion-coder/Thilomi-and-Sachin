@@ -365,7 +365,7 @@ function Hero() {
     <section id="hero" className="relative mx-auto max-w-2xl px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
       <Reveal className="flex flex-col items-center">
         <div className="mx-auto mb-9" style={{filter: 'drop-shadow(0 2px 6px rgba(120,95,50,0.18))'}}>
-          <Monogram size="clamp(3.4rem,15vw,5.2rem)" />
+          <Monogram size="clamp(2.7rem,12vw,4.2rem)" />
         </div>
         <p className="text-[0.98rem] sm:text-[1.08rem]" style={script}>
           With hearts full of love and warmth,
