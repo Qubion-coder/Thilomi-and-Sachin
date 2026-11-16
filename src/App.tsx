@@ -865,9 +865,6 @@ function Venue() {
           >
             {CONFIG.venueName}
           </h3>
-          <span className="italic" style={{fontFamily: F.body, color: C.text, fontSize: '1.15rem'}}>
-            {CONFIG.venueHall}
-          </span>
           <span className="uppercase" style={{fontFamily: F.marcellus, color: C.gold, letterSpacing: '0.22em', fontSize: '0.78rem'}}>
             {CONFIG.venueCity}
           </span>
