@@ -26,6 +26,7 @@ export const CONFIG = {
   eventStart: '2026-12-21T10:00:00+05:30',
   eventEnd: '2026-12-21T16:00:00+05:30',
   venueName: "Earl's Regent Hotel",
+  venueHall: 'Ballroom',
   venueCity: 'Kandy',
   venueAddress: '40/1 Deveni Rajasinghe Mawatha, Peradeniya, Kandy, Sri Lanka',
   mapLink: 'https://maps.app.goo.gl/HFBPQg55CUNXCk1J6',
@@ -445,6 +446,7 @@ function Hero() {
           style={{fontFamily: F.marcellus, color: C.text, letterSpacing: '0.12em', fontSize: 'clamp(0.85rem,3vw,1.05rem)'}}
         >
           <p style={{fontWeight: 700}}>{CONFIG.venueName}</p>
+          <p>{CONFIG.venueHall}</p>
           <p>{CONFIG.venueCity}</p>
         </div>
         <p className="mt-4 text-[0.95rem] italic" style={{fontFamily: F.body, color: C.muted}}>
@@ -545,7 +547,7 @@ function AddToCalendar() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const title = `${CONFIG.bride} & ${CONFIG.groom} Wedding`;
-  const location = CONFIG.venueAddress;
+  const location = `${CONFIG.venueHall}, ${CONFIG.venueName}, ${CONFIG.venueAddress}`;
   const details = CONFIG.timeline.map((t) => `${t.time} ${t.title}`).join(' · ');
   const start = toIcsDate(CONFIG.eventStart);
   const end = toIcsDate(CONFIG.eventEnd);
@@ -858,6 +860,9 @@ function Venue() {
           >
             {CONFIG.venueName}
           </h3>
+          <span className="italic" style={{fontFamily: F.body, color: C.text, fontSize: '1.15rem'}}>
+            {CONFIG.venueHall}
+          </span>
           <span className="uppercase" style={{fontFamily: F.marcellus, color: C.gold, letterSpacing: '0.22em', fontSize: '0.78rem'}}>
             {CONFIG.venueCity}
           </span>
