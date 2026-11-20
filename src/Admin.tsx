@@ -26,7 +26,7 @@ ${link}
 Your presence would truly mean the world to us, and we would be honored to celebrate this beautiful moment together.
 
 With love,
-❤️ ${CONFIG.groom} & ${CONFIG.bride}`;
+${CONFIG.bride} & ${CONFIG.groom} ❤️`;
 }
 
 export default function Admin() {
